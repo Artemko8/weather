@@ -42,7 +42,7 @@ def get_weather():
             <style>
                 body {{ font-family: Arial, sans-serif; padding: 20px; }}
                 h1 {{ color: #4CAF50; }}
-                .weather-info {{ font-size: 20px; margin-top: 20px; }}
+                .weather-info {{ font-size: 18px; margin-top: 20px; }}
                 .weather-table {{ border-collapse: collapse; width: 100%; }}
                 .weather-table th, .weather-table td {{ padding: 8px; text-align: left; border: 1px solid #ddd; }}
                 .weather-table th {{ background-color: #f2f2f2; }}
