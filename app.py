@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify
 import requests
 import pandas as pd
 import json
@@ -8,19 +8,19 @@ app = Flask(__name__)
 @app.route('/weather')
 def get_weather():
     url = "https://my.meteoblue.com/packages/basic-day?apikey=aVAZbRQNPt81I5rn&lat=41.5667&lon=23.7333&asl=535&format=json"
-
+    
     try:
         # Fetch weather data
         response = requests.get(url)
         response.raise_for_status()  # Raises an exception for 4xx/5xx errors
         data = response.json()  # Parse the JSON response
-
-        # Debugging: print out the structure of the data
-        print(json.dumps(data, indent=4))
+        
+        # Debugging: print out the entire structure of the data
+        print(json.dumps(data, indent=4))  # Pretty print the entire JSON response
 
         # Extract data for table rows
         weather_data = []
-        for forecast in data['forecast']:
+        for forecast in data.get('data', []):  # Adjusted to handle the correct data structure
             row = {
                 "date": forecast.get('date'),
                 "temperature": forecast.get('temperature'),
@@ -33,11 +33,11 @@ def get_weather():
         # Convert the weather data to a Pandas DataFrame
         df = pd.DataFrame(weather_data)
 
-        # Render the DataFrame as an HTML table
+        # Convert the DataFrame to HTML and style it with Bootstrap
         html_table = df.to_html(classes="table table-bordered table-striped", index=False)
 
         # Return the HTML page with the weather data
-        return render_template('weather.html', table=html_table)
+        return html_table
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": "Request failed", "message": str(e)}), 500
