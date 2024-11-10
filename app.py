@@ -1,6 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import requests
-import pandas as pd  # Import pandas
+import pandas as pd
 import json
 
 app = Flask(__name__)
@@ -8,16 +8,30 @@ app = Flask(__name__)
 @app.route('/weather')
 def get_weather():
     url = "https://my.meteoblue.com/packages/basic-day?apikey=aVAZbRQNPt81I5rn&lat=41.5667&lon=23.7333&asl=535&format=json"
-    
+
     try:
+        # Fetch weather data
         response = requests.get(url)
         response.raise_for_status()  # Raises an exception for 4xx/5xx errors
-        
-        # Parse the JSON response
-        data = response.json()
+        data = response.json()  # Parse the JSON response
 
-        # Convert the JSON data into a Pandas DataFrame
-        df = pd.json_normalize(data)  # Flatten the JSON data into a table format
+        # Debugging: print out the structure of the data
+        print(json.dumps(data, indent=4))
+
+        # Extract data for table rows
+        weather_data = []
+        for forecast in data['forecast']:
+            row = {
+                "date": forecast.get('date'),
+                "temperature": forecast.get('temperature'),
+                "precipitation": forecast.get('precipitation'),
+                "windspeed": forecast.get('windspeed'),
+                "winddirection": forecast.get('winddirection'),
+            }
+            weather_data.append(row)
+
+        # Convert the weather data to a Pandas DataFrame
+        df = pd.DataFrame(weather_data)
 
         # Render the DataFrame as an HTML table
         html_table = df.to_html(classes="table table-bordered table-striped", index=False)
@@ -27,9 +41,8 @@ def get_weather():
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": "Request failed", "message": str(e)}), 500
-
     except ValueError as e:
         return jsonify({"error": "Invalid JSON response", "message": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050, debug=True)  # Enable debug for more detailed logs
+    app.run(host='0.0.0.0', port=5050, debug=True)
