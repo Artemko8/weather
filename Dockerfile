@@ -11,7 +11,7 @@ WORKDIR /app
 COPY app.py /app
 
 # Install the necessary Python packages
-RUN pip install --no-cache-dir flask requests
+RUN pip install --no-cache-dir flask requests pandas
 
 # Expose the port the app will run on
 EXPOSE 5000
