@@ -11,7 +11,8 @@ url = "https://my.meteoblue.com/packages/basic-day?apikey=aVAZbRQNPt81I5rn&lat=4
 def get_weather():
     # Make the request to the Meteoblue API
     response = requests.get(url)
-    
+    print(json.dumps(data, indent=4))  # Pretty print the response to check its structure
+
     # Check if the response is successful
     if response.status_code == 200:
         data = response.json()
