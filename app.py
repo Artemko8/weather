@@ -1,6 +1,7 @@
 from flask import Flask, render_template_string
 import requests
 import pandas as pd
+import json  # Import the json module
 
 app = Flask(__name__)
 
