@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y apache2 libapache2-mod-wsgi-py3
 WORKDIR /app
 
 # Copy the Python script into the container
-COPY app.py /app
+COPY . /app/
 
 # Install the necessary Python packages
 RUN pip install --no-cache-dir flask requests pandas
