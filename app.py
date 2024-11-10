@@ -32,4 +32,4 @@ def get_weather():
         return jsonify({"error": "Invalid JSON response", "message": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=5050, debug=True)  # Enable debug for more detailed logs
